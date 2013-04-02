@@ -28,6 +28,14 @@ namespace RecycleIISAppPools.UnitTests
         }
 
         [Test]
+        [TestCase("product2 product3", null)]
+        [TestCase("ProductOther some*", "ProductOther,productother,someProduct,someProductOther,someProductEnds")]        
+        public void FilterByMultiple(string filterlist, string contains)
+        {
+            FilterTest(filterlist, contains);
+        }
+
+        [Test]
         [TestCase("testing*", null)]
         [TestCase("product*", "Product,product,productother,")]
         [TestCase("productoth*", "ProductOther,productother")]
@@ -57,7 +65,7 @@ namespace RecycleIISAppPools.UnitTests
 
         private void FilterTest(string filterlist, string contains)
         {
-            var filters = new List<string>(filterlist.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries));
+            var filters = new List<string>(filterlist.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries));
             var filtered = NameFilter.Filter(filters, _names);
 
             if (contains != null)
