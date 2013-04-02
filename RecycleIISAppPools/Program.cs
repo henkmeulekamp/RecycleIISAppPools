@@ -7,8 +7,10 @@ namespace RecycleIISAppPools
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
+            
             RecycleCommands arguments = null;
             try
             {
@@ -17,27 +19,29 @@ namespace RecycleIISAppPools
             catch (CommandLineException exception)
             {
                 ShowHelp(exception);
+                WaitForKeyAndExit();
                 return;
             }
 
             if (arguments != null && arguments.Help)
             {
                 ShowHelp();
+                WaitForKeyAndExit();
                 return;
             }
 
             if(arguments==null) arguments = new RecycleCommands();
-
+            
             if(!string.IsNullOrEmpty(arguments.Server)) Console.WriteLine("Server : {0}",arguments.Server);
             if (!string.IsNullOrEmpty(arguments.Filter)) Console.WriteLine("Filter : {0}", arguments.Filter);
-
-
+            
             var recycler = new Recycler(arguments.Server, arguments.Username, arguments.Password);
             var appPools = recycler.GetAppPools();
            
             if (!appPools.Any())
             {
                 Console.WriteLine("No app pools found!");
+                WaitForKeyAndExit(arguments.NoWait);
                 return;
             }
 
@@ -50,7 +54,7 @@ namespace RecycleIISAppPools
                 Console.WriteLine("Filter by name 'recycle /f name' or 'recycle /f name*' or  'recycle /f name1* name2 name13'");
                 Console.WriteLine("Multiple names allowed (with space as divider) and * is wilcard at start and/or end of name");
 
-                WaitForKeyAndExit();
+                WaitForKeyAndExit(arguments.NoWait);
                 return;
             }
 
@@ -61,12 +65,12 @@ namespace RecycleIISAppPools
             if (!recycleList.Any())
             {             
                 Console.WriteLine("No app pools found for argumentlist!");
-                WaitForKeyAndExit();
+                WaitForKeyAndExit(arguments.NoWait);
                 return;
             }
 
             recycleList.ForEach(recycler.Recycle);
-            WaitForKeyAndExit();            
+            WaitForKeyAndExit(arguments.NoWait);
         }
 
         private static void ShowHelp(CommandLineException exception = null)
@@ -84,8 +88,10 @@ namespace RecycleIISAppPools
         }
     
 
-        private static void WaitForKeyAndExit()
+        private static void WaitForKeyAndExit(bool nowait = false)
         {
+            if(nowait)return;
+
             //auto kill after 3 seconds or wait for keyinput
             Task.WaitAny(new Task[] { new TaskFactory().StartNew(() => Console.ReadKey()) }, TimeSpan.FromSeconds(3));
         }
@@ -107,7 +113,10 @@ namespace RecycleIISAppPools
         [CommandLineParameter(Name = "username", Command = "u", Default = "", Description = "Specifies username for server, leave empty when using current account")]
         public string Username { get; set; }
 
-        [CommandLineParameter(Name = "password", Command = "p", Default = null, Description = "Specifies password for server, leave empty when using current accountt")]
-        public string Password { get; set; }    
+        [CommandLineParameter(Name = "password", Command = "p", Default = null, Description = "Specifies password for server, leave empty when using current account")]
+        public string Password { get; set; }
+
+        [CommandLineParameter(Name = "nowait", Command = "w", Default = false, Description = "Dont wait just before closing app.")]
+        public bool NoWait { get; set; }  
     } 
 }
