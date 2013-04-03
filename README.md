@@ -14,7 +14,7 @@ Recycle [/?]  [/f]  [/s]  [/u]  [/p] [/w]
 [/f]  App Pool name filters, use keyword separated with spaces, Wildcard = *  
 [/s]  Specifies remote server name, leave empty for localhost  
 [/u]  Specifies username for server, leave empty when using current account  
-[/p]  Specifies password for server, leave empty when using current account 
+[/p]  Specifies password for server, leave empty when using current account   
 [/w]  Dont wait just before closing app, if not used it waits for key press or 3 seconds   
   
 Notes on filters  
