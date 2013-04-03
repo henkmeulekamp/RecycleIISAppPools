@@ -26,7 +26,7 @@ Useful for auto deploy scripts, sometimes deploying by just copying files into a
 due file or folder locking. Recycling the app pools for that web application seems to help. I wrote this app to
 be able to quickly recycle certain applications within deploy script which will deploy new files.
 
-## Examples ##
+### Examples ###
   
 List app pools on current server 
 - recycle
@@ -50,10 +50,6 @@ Show help
 
 - .NET 4.0  
     - *I'm pretty sure a 2.0 and 3.5 version can be made by compiling it against those frameworks.*
-
-## Questions ##
-
-Ask: henk@meulekamp.net
 
 ## OSS Libraries used ##
 The following libraries are used. Each library is released under its respective licence:
